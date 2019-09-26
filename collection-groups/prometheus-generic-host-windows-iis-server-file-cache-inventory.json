@@ -1,0 +1,40 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.windows.iis.server.file.cache.inventory",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, wmi_iis_server_file_cache_items_total , wmi_iis_server_file_cache_hits_total, wmi_iis_server_file_cache_memory_bytes, wmi_iis_server_file_cache_max_memory_bytes FROM WMI WHERE assetId='__ASSET_ID__' AND time > now() - 10m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,
+    "component-type": "file-cache",
+    "component-label-field": "name"
+  },
+  "data-handlers": [
+    {
+      "id": "prometheus.host.windows.iis.server.file.cache.inventory",
+      "post-collection-type": "data-persistence",
+      "post-collection-handler": "prometheus_host_windows_iis_server_file_cache_inventory.js",
+      "component-definition": {
+        "component-info-fields": [
+          {
+            "name": "name",
+            "totalitems" : "totalitems",
+            "totalhits" : "totalhits",
+            "cachememory" : "cachememory",
+            "cachemaxmemory" : "cachemaxmemory"
+          }
+        ],
+        "fqn-fields": [
+          {
+            "name": "name"
+          }
+        ]
+      }
+    }
+  ]
+}

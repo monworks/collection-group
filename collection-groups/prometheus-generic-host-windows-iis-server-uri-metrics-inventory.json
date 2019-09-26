@@ -1,0 +1,36 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.windows.iis.server.uri.metrics.inventory",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId,site, wmi_iis_current_connections, wmi_iis_received_bytes_total, wmi_iis_sent_bytes_total, wmi_iis_current_non_anonymous_users,wmi_iis_anonymous_users_total FROM WMI WHERE assetId='__ASSET_ID__' AND time > now() - 10m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,
+    "component-type": "uri-metrics",
+    "component-label-field": "name"
+  },
+  "data-handlers": [
+    {
+      "id": "prometheus.host.windows.iis.server.uri.metrics.inventory",
+      "post-collection-type": "data-persistence",
+      "post-collection-handler": "prometheus_host_windows_iis_server_uri_metrics_inventory.js",
+      "component-definition": {
+        "component-info-fields": [
+          {
+            "name": "name"
+          }
+        ],
+        "fqn-fields": [
+          {
+            "name": "name"
+          }
+        ]
+      }
+    }
+  ]
+}

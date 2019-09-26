@@ -1,0 +1,43 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.windows.iis.server.uri.cache.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, mode, wmi_iis_server_uri_cache_items_total , wmi_iis_server_uri_cache_hits_total FROM WMI WHERE assetId='__ASSET_ID__' AND time > now() - 10m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,
+    "component-type": "uri-cache",
+    "component-label-field": "name",
+    "fqn-fields": [
+      {
+        "name": "name"
+      }
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.host.windows.iis.server.uri.cache.monitoring.usage",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_host_windows_iis_server_uri_cache_monitoring.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "metric",
+        "field-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ]
+      }
+    }
+  ]
+}
