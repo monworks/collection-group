@@ -1,0 +1,43 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.windows.mssql.server.instances.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, instance, wmi_mssql_memmgr_lock_memory_bytes, wmi_mssql_memmgr_optimizer_memory_bytes, wmi_mssql_bufman_buffer_cache_hit_ratio, wmi_mssql_genstats_sql_trace_io_provider_lock_waits, wmi_mssql_bufman_page_lookups, wmi_mssql_bufman_page_reads, wmi_mssql_bufman_page_writes, wmi_mssql_bufman_page_life_expectancy_seconds, wmi_mssql_genstats_user_connections, wmi_mssql_accessmethods_page_splits, wmi_mssql_memmgr_free_memory_bytes, wmi_mssql_memmgr_total_server_memory_bytes, wmi_mssql_memmgr_database_cache_memory_bytes, wmi_mssql_memmgr_sql_cache_memory_bytes FROM WMI WHERE assetId='__ASSET_ID__' AND time > now() - 10m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,
+    "component-type": "mssql-instances",
+    "component-label-field": "name",
+    "fqn-fields": [
+      {
+        "name": "name"
+      }
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.host.windows.mssql.server.instances.monitoring.usage",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_host_windows_mssql_server_instances_monitoring.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "metric",
+        "field-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ]
+      }
+    }
+  ]
+}
