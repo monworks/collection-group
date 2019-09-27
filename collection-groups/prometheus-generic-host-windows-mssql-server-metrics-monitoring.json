@@ -1,0 +1,43 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.windows.mssql.server.metrics.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, instance, \"database\", wmi_mssql_databases_active_transactions, wmi_mssql_databases_log_used_percent, wmi_mssql_databases_xtp_memory_used_bytes, wmi_mssql_databases_data_files_size_bytes, wmi_mssql_databases_log_files_used_size_bytes FROM WMI WHERE assetId='__ASSET_ID__' AND time > now() - 5m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,
+    "component-type": "mssql-metrics",
+    "component-label-field": "name",
+    "fqn-fields": [
+      {
+        "fqn": "fqn"
+      }
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.host.windows.mssql.server.metrics.monitoring.usage",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_host_windows_mssql_server_metrics_monitoring.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "metric",
+        "field-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ]
+      }
+    }
+  ]
+}
