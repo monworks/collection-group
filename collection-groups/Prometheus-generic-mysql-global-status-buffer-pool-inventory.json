@@ -1,0 +1,43 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.mysql.global.status.buffer.pool.inventory",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, mysql_global_status_innodb_buffer_pool_reads, mysql_global_status_innodb_buffer_pool_read_ahead, mysql_global_status_innodb_buffer_pool_read_ahead_evicted, mysql_global_status_innodb_buffer_pool_read_ahead_rnd, mysql_global_status_innodb_buffer_pool_read_requests, mysql_global_status_innodb_buffer_pool_write_requests, mysql_global_status_innodb_buffer_pool_wait_free FROM MySQL WHERE assetId='__ASSET_ID__' AND time > now() - 5m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,                                 
+    "component-type": "mysql-global-status-buffer-pool",
+    "component-label-field": "name"
+  },
+  "data-handlers": [
+    {
+      "id": "prometheus.mysql.global.status.buffer.pool.inventory",
+      "post-collection-type": "data-persistence",
+      "post-collection-handler": "prometheus_mysql_global_status_buffer_pool_inventory.js",
+      "component-definition": {
+        "component-info-fields": [
+          {
+            "name": "name",
+            "read": "read",
+            "write": "write",
+            "ahead": "ahead",
+            "evicted": "evicted",
+            "rnd": "rnd",
+            "wait":"wait",
+            "status":"status"
+          }
+        ],
+        "fqn-fields": [
+          {
+            "name": "name"
+          }
+        ]
+      }
+    }
+  ]
+}

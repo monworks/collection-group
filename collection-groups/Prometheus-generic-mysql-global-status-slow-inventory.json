@@ -1,0 +1,37 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.mysql.global.status.slow.inventory",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, mysql_global_status_slow_queries FROM MySQL WHERE assetId='__ASSET_ID__' AND time > now() - 5m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,                                 
+    "component-type": "mysql-global-status-slow",
+    "component-label-field": "name"
+  },
+  "data-handlers": [
+    {
+      "id": "prometheus.host.mysql.global.status.slow.inventory",
+      "post-collection-type": "data-persistence",
+      "post-collection-handler": "prometheus_host_mysql_global_status_slow_inventory.js",
+      "component-definition": {
+        "component-info-fields": [
+          {
+            "name": "name",
+            "slow1":"slow1"
+          }
+        ],
+        "fqn-fields": [
+          {
+            "name": "name"
+          }
+        ]
+      }
+    }
+  ]
+}

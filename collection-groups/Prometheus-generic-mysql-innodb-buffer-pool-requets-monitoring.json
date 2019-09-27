@@ -1,0 +1,44 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.mysql.innodb.buffer.pool.requests.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, mysql_info_schema_innodb_metrics_buffer_buffer_pool_read_requests_total, mysql_info_schema_innodb_metrics_buffer_buffer_pool_write_requests_total  FROM MySQL WHERE assetId='__ASSET_ID__' AND time > now() - 5m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,                                 
+    "component-type": "mysql-innodb-buffer-pool",
+    "component-label-field": "name",
+    "fqn-fields": [
+      {
+        "name": "name"
+      }
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.host.mysql.innodb.buffer.pool.requests.monitoring.metric",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_mysql_innodb_buffer_pool_requests_monitoring.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "metric",
+        "field-bindings": [
+          {
+            "metricValue": "metricValue"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "componentId": "componentId",
+            "metricName" : "metricName"
+          }
+        ]
+      }
+    }
+  ]
+}

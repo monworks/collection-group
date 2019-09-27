@@ -1,0 +1,44 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.mysql.innodb.metrics.buffer.pool.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, mysql_global_status_innodb_buffer_pool_wait_free, mysql_global_status_innodb_buffer_pool_read_ahead_rnd, mysql_global_status_innodb_buffer_pool_read_ahead, mysql_global_status_innodb_buffer_pool_read_ahead_evicted, mysql_global_status_innodb_buffer_pool_reads  FROM MySQL WHERE assetId='__ASSET_ID__' AND time > now() - 5m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,                                 
+    "component-type": "mysql-innodb-buffer-pool",
+    "component-label-field": "name",
+    "fqn-fields": [
+      {
+        "name": "name"
+      }
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.host.mysql.innodb.metrics.buffer.pool.monitoring.metric",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_host_mysql_innodb_metrics_buffer_pool_monitoring.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "metric",
+        "field-bindings": [
+          {
+            "metricValue": "metricValue"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "componentId": "componentId",
+            "metricName" : "metricName"
+          }
+        ]
+      }
+    }
+  ]
+}

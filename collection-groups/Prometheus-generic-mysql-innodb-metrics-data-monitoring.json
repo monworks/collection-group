@@ -1,0 +1,45 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.mysql.innodb.metrics.data.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, mysql_info_schema_innodb_metrics_os_os_data_reads_total, mysql_info_schema_innodb_metrics_os_os_data_writes_total, mysql_info_schema_innodb_metrics_os_os_data_fsyncs_total, mysql_info_schema_innodb_metrics_lock_lock_deadlocks_total FROM MySQL WHERE assetId='__ASSET_ID__' AND time > now() - 10m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,
+    "component-type": "mysql-innodb-metrics-data",
+    "component-label-field": "name",
+    "fqn-fields": [
+      {
+        "name": "name"
+      }
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.mysql.innodb.metrics.data.monitoring.metric",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_mysql_innodb_metrics_data_monitoring.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "metric",
+        "field-bindings": [
+          {
+            "metricValue": "metricValue"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "componentId": "componentId",
+            "metricName" : "metricName"
+          }
+        ]
+      }
+    }
+  ]
+}
+

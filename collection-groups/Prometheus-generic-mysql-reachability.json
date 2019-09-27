@@ -1,0 +1,35 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.mysql.reachability.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, \"device-ip\", mysql_up  FROM MySQL WHERE assetId='__ASSET_ID__' AND time > now() - 5m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.host.mysql.reachability.monitoring.metric.reachability",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_host_mysql_reachability.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "availability",
+        "field-bindings": [
+          {
+            "status": "reachabilityStatus"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "deviceIP": "deviceIP"
+          }
+        ]
+      }
+    }
+  ]
+}
