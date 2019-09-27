@@ -113,8 +113,12 @@ function prometheus_host_windows_iis_server_metadata_cache_inventory(data)
 		{
 			var fileObj = {}; 
 			fileObj["name"] = "metadata-cache";
+            if(counter_result[i]["wmi_iis_server_metadata_cache_items_cached_total"] >= 0){
 			fileObj["metatotalitems"] = counter_result[i]["wmi_iis_server_metadata_cache_items_cached_total"];
+            }
+            if(counter_result[i]["wmi_iis_server_metadata_cache_hits_total"] >= 0){
 			fileObj["metatotalhits"] = counter_result[i]["wmi_iis_server_metadata_cache_hits_total"];
+            }
 			finalResult.push(fileObj);
 			count = count + 1;
 		}

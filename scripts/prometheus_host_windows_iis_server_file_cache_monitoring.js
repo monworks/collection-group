@@ -117,59 +117,61 @@ function prometheus_host_windows_iis_server_file_cache_monitoring(data) {
 			} else {
 				myDate = myDate2;
 			}
-
+             
+            if(counter_result[i]["wmi_iis_server_file_cache_items_total"] >= 0){
 			var file_cache_items_total = counter_result[i]["wmi_iis_server_file_cache_items_total"];
-			var metricNameIT = "FileCache"
-			var componentIdIT = "TotalItems"
-			var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
-			pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
-			pointBuilder.addTime(myDate, java.util.concurrent.TimeUnit.MILLISECONDS);
-			pointBuilder.addData("assetId", data.assetId);
-			pointBuilder.addData("assetLabel", data.assetLabel);
-			pointBuilder.addData("customerId", data.customerId);
-			pointBuilder.addData("metricValue", file_cache_items_total);
-			pointBuilder.addData("metricName", metricNameIT);
-			pointBuilder.addData("componentId", componentIdIT);
-			data.points.add(pointBuilder);
+            var metricNameIT = "FileCache"
+            var componentIdIT = "TotalItems"
+            var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
+            pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
+            pointBuilder.addTime(myDate, java.util.concurrent.TimeUnit.MILLISECONDS);
+            pointBuilder.addData("assetId", data.assetId);
+            pointBuilder.addData("assetLabel", data.assetLabel);
+            pointBuilder.addData("customerId", data.customerId);
+            pointBuilder.addData("metricValue", file_cache_items_total);
+            pointBuilder.addData("metricName", metricNameIT);
+            pointBuilder.addData("componentId", componentIdIT);
+            data.points.add(pointBuilder);
 
-			data.scriptOutputs.put("metricValue", file_cache_items_total);
-			data.scriptOutputs.put("componentId", componentIdIT);
+            data.scriptOutputs.put("metricValue", file_cache_items_total);
+            data.scriptOutputs.put("componentId", componentIdIT);
+            }			
 
+            if(counter_result[i]["wmi_iis_server_file_cache_hits_total"] >= 0){
 			var file_cache_hits_total = counter_result[i]["wmi_iis_server_file_cache_hits_total"];
-			var metricNameHits = "FileCache";
-			var componentIdHits = "TotalHits"
+            var metricNameHits = "FileCache";
+            var componentIdHits = "TotalHits";
+            var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
+            pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
+            pointBuilder.addTime(myDate, java.util.concurrent.TimeUnit.MILLISECONDS);
+            pointBuilder.addData("assetId", data.assetId);
+            pointBuilder.addData("assetLabel", data.assetLabel);
+            pointBuilder.addData("customerId", data.customerId);
+            pointBuilder.addData("metricValue", file_cache_hits_total);
+            pointBuilder.addData("metricName", metricNameHits);
+            pointBuilder.addData("componentId", componentIdHits);
+            data.points.add(pointBuilder);
 
-			var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
-			pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
-			pointBuilder.addTime(myDate, java.util.concurrent.TimeUnit.MILLISECONDS);
-			pointBuilder.addData("assetId", data.assetId);
-			pointBuilder.addData("assetLabel", data.assetLabel);
-			pointBuilder.addData("customerId", data.customerId);
-			pointBuilder.addData("metricValue", file_cache_hits_total);
-			pointBuilder.addData("metricName", metricNameHits);
-			pointBuilder.addData("componentId", componentIdHits);
-			data.points.add(pointBuilder);
-
-			data.scriptOutputs.put("metricValue", file_cache_hits_total);
-			data.scriptOutputs.put("componentId", componentIdHits);
-
+            data.scriptOutputs.put("metricValue", file_cache_hits_total);
+            data.scriptOutputs.put("componentId", componentIdHits);
+            }		
+            
 			var totalmemKBytes = getRoundedToTwoDecimalPlaces((counter_result[i]["wmi_iis_server_file_cache_memory_bytes"] / 1024));
-			var metricNameMem = "Memory";
-			var componentIdMem = "Memory"
+            var metricNameMem = "Memory";
+            var componentIdMem = "Memory";
+            var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
+            pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
+            pointBuilder.addTime(myDate, java.util.concurrent.TimeUnit.MILLISECONDS);
+            pointBuilder.addData("assetId", data.assetId);
+            pointBuilder.addData("assetLabel", data.assetLabel);
+            pointBuilder.addData("customerId", data.customerId)
+            pointBuilder.addData("metricValue", totalmemKBytes);
+            pointBuilder.addData("metricName", metricNameMem);
+            pointBuilder.addData("componentId", componentIdMem);
+            data.points.add(pointBuilder);
 
-			var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
-			pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
-			pointBuilder.addTime(myDate, java.util.concurrent.TimeUnit.MILLISECONDS);
-			pointBuilder.addData("assetId", data.assetId);
-			pointBuilder.addData("assetLabel", data.assetLabel);
-			pointBuilder.addData("customerId", data.customerId)
-			pointBuilder.addData("metricValue", totalmemKBytes);
-			pointBuilder.addData("metricName", metricNameMem);
-			pointBuilder.addData("componentId", componentIdMem);
-			data.points.add(pointBuilder);
-
-			data.scriptOutputs.put("metricValue", totalmemKBytes);
-			data.scriptOutputs.put("componentId", componentIdMem);
+            data.scriptOutputs.put("metricValue", totalmemKBytes);
+            data.scriptOutputs.put("componentId", componentIdMem);          
 			count = count + 1;
 		}
 	}

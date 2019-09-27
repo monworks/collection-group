@@ -160,6 +160,7 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 				myDate = myDate2;
 			}
 		    
+		    
 	    	var current_connections = counter_result[i].wmi_iis_current_connections;
 			var metricName = "CurrentConnections"
 			var componentId = counter_result[i]["site"];
@@ -177,6 +178,7 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 			data.scriptOutputs.put("metricValue", current_connections);
 			data.scriptOutputs.put("componentId", componentId);
 	        
+	        if(counter_result[i]["wmi_iis_received_bytes_total"] >= 0){
 	        var received_KB = getRoundedToTwoDecimalPlaces((counter_result[i]["wmi_iis_received_bytes_total"] / 1024));
 	        var metricName = "ReceivedKB"
 			var componentId = counter_result[i]["site"]
@@ -193,9 +195,11 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 
 			data.scriptOutputs.put("metricValue", received_KB);
 			data.scriptOutputs.put("componentId", componentId);
-	    
+		    }
+	        
+	        if(counter_result[i]["wmi_iis_sent_bytes_total"] >=0){
 	    	var sentKB = getRoundedToTwoDecimalPlaces((counter_result[i]["wmi_iis_sent_bytes_total"] / 1024));
-			var metricName = "SentKB"
+	    	var metricName = "SentKB"
 			var componentId = counter_result[i]["site"]
 			var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
 			pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
@@ -210,6 +214,7 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 
 			data.scriptOutputs.put("metricValue", sentKB);
 			data.scriptOutputs.put("componentId", componentId);
+	    	}			
 	        
 	        var non_anon_usr = counter_result[i].wmi_iis_current_non_anonymous_users;
 	        var metricName = "NonAnonUsr"
@@ -227,7 +232,8 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 
 			data.scriptOutputs.put("metricValue", non_anon_usr);
 			data.scriptOutputs.put("componentId", componentId);
-
+            
+            
 			var non_anon_usr = counter_result[i].wmi_iis_current_anonymous_users;
 	        var metricName = "AnonUsr"
 			var componentId = counter_result[i]["site"]
@@ -243,9 +249,10 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 			data.points.add(pointBuilder);
 			data.scriptOutputs.put("metricValue", non_anon_usr);
 			data.scriptOutputs.put("componentId", componentId);
-
+            
+            if(counter_result[i].wmi_iis_files_received_total >= 0){
 			var non_anon_usr = counter_result[i].wmi_iis_files_received_total;
-	        var metricName = "FilesReceived"
+			var metricName = "FilesReceived"
 			var componentId = counter_result[i]["site"]
 			var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
 			pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
@@ -259,9 +266,11 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 			data.points.add(pointBuilder);
 			data.scriptOutputs.put("metricValue", non_anon_usr);
 			data.scriptOutputs.put("componentId", componentId);
-
+			}	        
+            
+            if(counter_result[i].wmi_iis_files_sent_total >= 0){
 			var non_anon_usr = counter_result[i].wmi_iis_files_sent_total;
-	        var metricName = "FilesSent"
+			var metricName = "FilesSent"
 			var componentId = counter_result[i]["site"]
 			var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
 			pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
@@ -275,7 +284,7 @@ function prometheus_host_windows_iis_server_uri_metrics_monitoring(data) {
 			data.points.add(pointBuilder);
 			data.scriptOutputs.put("metricValue", non_anon_usr);
 			data.scriptOutputs.put("componentId", componentId);
-
+			}
 			count = count + 1;
 		}
 	}

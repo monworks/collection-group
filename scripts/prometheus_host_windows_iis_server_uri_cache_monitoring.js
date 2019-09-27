@@ -1,7 +1,7 @@
 function merge_by_key(key, jsonArray) {
 	outputArray = []
 	timeArr = []
-		//find the timestamps and put it uniquely in an array
+	//find the timestamps and put it uniquely in an array
 	for (var i = 0; i < jsonArray.length; i++) {
 		if (!(timeArr.indexOf(jsonArray[i].time) != -1)) {
 			timeArr.push(jsonArray[i].time)
@@ -42,7 +42,7 @@ var preserveKey = []
 
 function diffCounter(jsonArray, preserveKey, key) {
 	timeArr = []
-		//find the timestamps and put it uniquely in an array
+	//find the timestamps and put it uniquely in an array
 	for (var i = 0; i < jsonArray.length; i++) {
 		if (!(timeArr.indexOf(jsonArray[i].time) != -1)) {
 			timeArr.push(jsonArray[i].time)
@@ -69,12 +69,12 @@ function diffCounter(jsonArray, preserveKey, key) {
 
 	for (var j in tempSpace[0]) {
 		tempStor = {}
-			//this logic will ensure ephemeral points coming up and going down.
+		//this logic will ensure ephemeral points coming up and going down.
 
 		for (var k in tempSpace[0][j]) {
 			if (k == "time") {
 				tempStor['time1'] = tempSpace[0][j]['time']
-					// print(tempSpace[0][i]['time'])
+				// print(tempSpace[0][i]['time'])
 				tempStor['time2'] = tempSpace[1][j]['time']
 				continue;
 			}
@@ -100,32 +100,31 @@ function prometheus_host_windows_iis_server_uri_cache_monitoring(data) {
 		if (collection_time == undefined || collection_time == null)
 			collection_time = java.lang.System.currentTimeMillis();
 
-		for(i=0;i<result.length;i++){
-		    mode = result[i]["mode"]
-		    
-		    var cache_items = result[i]["wmi_iis_server_uri_cache_items_total"];
-		    var cache_hits = result[i]["wmi_iis_server_uri_cache_hits_total"];
-		    if(mode == "kernel"){
-		        result[i].kernel_wmi_iis_server_uri_cache_items_total = result[i]["wmi_iis_server_uri_cache_items_total"];
-		        result[i].kernel_wmi_iis_server_uri_cache_hits_total = result[i]["wmi_iis_server_uri_cache_hits_total"];
-		        result[i].user_wmi_iis_server_uri_cache_items_total = null;
-		        result[i].user_wmi_iis_server_uri_cache_hits_total = null;
-		        delete result[i].wmi_iis_server_uri_cache_items_total;
-		        delete result[i].wmi_iis_server_uri_cache_hits_total;
-		    }
-		    else{
-		            result[i].kernel_wmi_iis_server_uri_cache_items_total = null;
-		            result[i].kernel_wmi_iis_server_uri_cache_hits_total = null;
-		            result[i].user_wmi_iis_server_uri_cache_items_total = result[i]["wmi_iis_server_uri_cache_items_total"];
-		            result[i].user_wmi_iis_server_uri_cache_hits_total = result[i]["wmi_iis_server_uri_cache_hits_total"];;
-		            delete result[i].wmi_iis_server_uri_cache_items_total;
-		            delete result[i].wmi_iis_server_uri_cache_hits_total;
-		        }
+		for (i = 0; i < result.length; i++) {
+			mode = result[i]["mode"]
+
+			var cache_items = result[i]["wmi_iis_server_uri_cache_items_total"];
+			var cache_hits = result[i]["wmi_iis_server_uri_cache_hits_total"];
+			if (mode == "kernel") {
+				result[i].kernel_wmi_iis_server_uri_cache_items_total = result[i]["wmi_iis_server_uri_cache_items_total"];
+				result[i].kernel_wmi_iis_server_uri_cache_hits_total = result[i]["wmi_iis_server_uri_cache_hits_total"];
+				result[i].user_wmi_iis_server_uri_cache_items_total = null;
+				result[i].user_wmi_iis_server_uri_cache_hits_total = null;
+				delete result[i].wmi_iis_server_uri_cache_items_total;
+				delete result[i].wmi_iis_server_uri_cache_hits_total;
+			} else {
+				result[i].kernel_wmi_iis_server_uri_cache_items_total = null;
+				result[i].kernel_wmi_iis_server_uri_cache_hits_total = null;
+				result[i].user_wmi_iis_server_uri_cache_items_total = result[i]["wmi_iis_server_uri_cache_items_total"];
+				result[i].user_wmi_iis_server_uri_cache_hits_total = result[i]["wmi_iis_server_uri_cache_hits_total"];;
+				delete result[i].wmi_iis_server_uri_cache_items_total;
+				delete result[i].wmi_iis_server_uri_cache_hits_total;
+			}
 		}
 
 		var merge_result = merge_by_key("mode", result);
 
-		var counter_result = diffCounter(merge_result,["time", "assetId", "assetLabel", "customerId","mode"],"mode");
+		var counter_result = diffCounter(merge_result, ["time", "assetId", "assetLabel", "customerId", "mode"], "mode");
 
 		for (i = 0; i < counter_result.length; i++) {
 			time1 = counter_result[i]["time1"];
@@ -141,9 +140,10 @@ function prometheus_host_windows_iis_server_uri_cache_monitoring(data) {
 				myDate = myDate2;
 			}
 
-			var mode = counter_result[i]["mode"]
-		    if(mode == "kernel"){
-		    	var kernel_items = counter_result[i].kernel_wmi_iis_server_uri_cache_items_total;
+			var mode = counter_result[i]["mode"];
+			
+			if (mode == "kernel" && counter_result[i].kernel_wmi_iis_server_uri_cache_items_total >= 0) {
+				var kernel_items = counter_result[i].kernel_wmi_iis_server_uri_cache_items_total;
 				var metricName = "UriItems"
 				var name = counter_result[i]["mode"]
 				var componentId = counter_result[i]["mode"]
@@ -160,9 +160,11 @@ function prometheus_host_windows_iis_server_uri_cache_monitoring(data) {
 
 				data.scriptOutputs.put("metricValue", kernel_items);
 				data.scriptOutputs.put("componentId", componentId);
-		        
-		        var kernel_hits = counter_result[i].kernel_wmi_iis_server_uri_cache_hits_total;
-		        var metricName = "UriHits"
+			}
+
+			if (mode == "kernel" && counter_result[i].kernel_wmi_iis_server_uri_cache_hits_total >= 0) {
+				var kernel_hits = counter_result[i].kernel_wmi_iis_server_uri_cache_hits_total;
+				var metricName = "UriHits"
 				var componentId = counter_result[i]["mode"]
 				var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
 				pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
@@ -177,9 +179,9 @@ function prometheus_host_windows_iis_server_uri_cache_monitoring(data) {
 
 				data.scriptOutputs.put("metricValue", kernel_hits);
 				data.scriptOutputs.put("componentId", componentId);
-		    }
-		    else{
-		    	var user_items = counter_result[i].user_wmi_iis_server_uri_cache_items_total;
+			}
+			if (mode == "user" && counter_result[i].user_wmi_iis_server_uri_cache_items_total >= 0){
+				var user_items = counter_result[i].user_wmi_iis_server_uri_cache_items_total;
 				var metricName = "UriItems"
 				var componentId = counter_result[i]["mode"]
 				var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
@@ -195,9 +197,11 @@ function prometheus_host_windows_iis_server_uri_cache_monitoring(data) {
 
 				data.scriptOutputs.put("metricValue", user_items);
 				data.scriptOutputs.put("componentId", componentId);
-		        
-		        var user_hits = counter_result[i].user_wmi_iis_server_uri_cache_hits_total;
-		        var metricName = "UriHits"
+			}
+
+			if (mode == "user" && counter_result[i].user_wmi_iis_server_uri_cache_hits_total >= 0){
+				var user_hits = counter_result[i].user_wmi_iis_server_uri_cache_hits_total;
+				var metricName = "UriHits"
 				var componentId = counter_result[i]["mode"]
 				var pointBuilder = Java.type("com.cfx.pulse.commons.metrics.influxdb.InfluxdbDataPointBuilder").newInstance();
 				pointBuilder.withMetric(exporterName, data.influxDB.getMetricsInfo())
@@ -212,7 +216,7 @@ function prometheus_host_windows_iis_server_uri_cache_monitoring(data) {
 
 				data.scriptOutputs.put("metricValue", user_hits);
 				data.scriptOutputs.put("componentId", componentId);
-		    }			
+			}			
 			count = count + 1;
 		}
 	}

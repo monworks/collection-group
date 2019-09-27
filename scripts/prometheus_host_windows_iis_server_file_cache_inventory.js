@@ -113,11 +113,24 @@ function prometheus_host_windows_iis_server_file_cache_inventory(data)
 		{
 			var fileObj = {}; 
 			fileObj["name"] = "file-cache";
+
+            if(counter_result[i]["wmi_iis_server_file_cache_items_total"] >= 0){
 			fileObj["totalitems"] = counter_result[i]["wmi_iis_server_file_cache_items_total"];
-			fileObj["totalhits"] = counter_result[i]["wmi_iis_server_file_cache_hits_total"];
-			fileObj["cachememory"] = getRoundedToTwoDecimalPlaces((counter_result[i]["wmi_iis_server_file_cache_memory_bytes"] / 1024));
-			fileObj["cachemaxmemory"] = getRoundedToTwoDecimalPlaces((counter_result[i]["wmi_iis_server_file_cache_max_memory_bytes"] / 1024)); 
-			finalResult.push(fileObj);
+			}
+
+            if(counter_result[i]["wmi_iis_server_file_cache_hits_total"]  >= 0){
+            fileObj["totalhits"] = counter_result[i]["wmi_iis_server_file_cache_hits_total"];
+			}
+
+            if((counter_result[i]["wmi_iis_server_file_cache_memory_bytes"] / 1024) >= 0){
+            fileObj["cachememory"] = getRoundedToTwoDecimalPlaces((counter_result[i]["wmi_iis_server_file_cache_memory_bytes"] / 1024));
+			}
+
+            if((counter_result[i]["wmi_iis_server_file_cache_max_memory_bytes"] / 1024) >= 0){
+            fileObj["cachemaxmemory"] = getRoundedToTwoDecimalPlaces((counter_result[i]["wmi_iis_server_file_cache_max_memory_bytes"] / 1024)); 
+			}
+
+            finalResult.push(fileObj);
 			count = count + 1;
 		}
 		print("finalResult",JSON.stringify(finalResult));

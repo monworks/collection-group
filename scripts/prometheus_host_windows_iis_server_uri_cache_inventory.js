@@ -112,7 +112,9 @@ function prometheus_host_windows_iis_server_uri_cache_inventory(data)
 		for (i = 0; i < counter_result.length; i++) 
 		{
 			var fileObj = {}; 
+            
 			fileObj["name"] = counter_result[i]["mode"];
+            
 			finalResult.push(fileObj);
 			count = count + 1;
 		}
