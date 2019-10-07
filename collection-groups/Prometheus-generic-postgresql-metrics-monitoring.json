@@ -1,0 +1,43 @@
+{
+  "name": "io.macaw.feature.generic.prometheus.host.postgresql.database.metrics.monitoring",
+  "sourceMechanism": "HTTP",
+  "collection-target": {
+    "target-type": "influx",
+    "influx-query": "SELECT assetId, assetLabel, customerId, datname, pg_stat_database_tup_deleted, pg_stat_database_tup_fetched, pg_stat_database_tup_inserted,pg_stat_database_tup_returned, pg_stat_database_tup_updated, pg_locks_count, pg_stat_database_deadlocks, pg_stat_database_xact_commit, pg_stat_database_xact_rollback, pg_stat_database_numbackends,pg_stat_database_blks_hit, pg_stat_database_blks_read FROM PostgreSQL WHERE assetId='__ASSET_ID__' AND time > now() - 10m",
+    "argTypes": [
+      "java.lang.String"
+    ],
+    "args": [
+      "__ASSET_ID__"
+    ],
+    "is-component": true,
+    "component-type": "postgresql-metrics",
+    "component-label-field": "name",
+    "fqn-fields": [
+      {
+        "name": "name"
+      }
+    ]
+  },
+  "data-handlers": [
+    {
+      "id": "io.macaw.feature.generic.prometheus.host.postgresql.database.metrics.monitoring.usage",
+      "post-collection-type": "custom-script",
+      "post-collection-handler": "prometheus_host_postgresql_database_metrics_monitoring.js",
+      "table-bindings": {
+        "database-name": "MetricFamily",
+        "measurement": "metric",
+        "field-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ],
+        "tag-bindings": [
+          {
+            "dummy": "dummy"
+          }
+        ]
+      }
+    }
+  ]
+}
