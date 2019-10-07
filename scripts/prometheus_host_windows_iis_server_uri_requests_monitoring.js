@@ -1,49 +1,7 @@
 function merge_by_key(key, jsonArray) {
 	outputArray = []
 	timeArr = []
-	//find the timestamps and put it uniquely in an array
-	for (var i = 0; i < jsonArray.length; i++) {
-		if (!(timeArr.indexOf(jsonArray[i].time) != -1)) {
-			timeArr.push(jsonArray[i].time)
-		}
-	}
-	// print("timeArr", timeArr)
-
-	//logic for merging all null components per timestamp and putting it in an outputArray
-	for (var l in timeArr) {
-		tempStore = {}
-		for (var i = 0; i < jsonArray.length; i++) {
-			if (jsonArray[i].time == timeArr[l]) {
-				if (!(jsonArray[i][key] in tempStore)) {
-					tempStore[jsonArray[i][key]] = jsonArray[i]
-				} else {
-					tempStore[jsonArray[i][key]] = jsonConcat(tempStore[jsonArray[i][key]], jsonArray[i])
-				}
-			}
-		}
-		// print("tempStore", tempStore)
-		for (var p in tempStore) {
-			outputArray.push(tempStore[p])
-		}
-	}
-	return outputArray;
-}
-
-function jsonConcat(o1, o2) {
-	for (var key in o2) {
-		if (o2[key] != null) {
-			o1[key] = o2[key];
-		}
-	}
-	return o1;
-}
-
-var preserveKey = []
-
-function merge_by_key(key, jsonArray) {
-	outputArray = []
-	timeArr = []
-	//find the timestamps and put it uniquely in an array
+		//find the timestamps and put it uniquely in an array
 	for (var i = 0; i < jsonArray.length; i++) {
 		if (!(timeArr.indexOf(jsonArray[i].time) != -1)) {
 			timeArr.push(jsonArray[i].time)
@@ -84,7 +42,7 @@ var preserveKey = []
 
 function diffCounter(jsonArray, preserveKey, key) {
 	timeArr = []
-	//find the timestamps and put it uniquely in an array
+		//find the timestamps and put it uniquely in an array
 	for (var i = 0; i < jsonArray.length; i++) {
 		if (!(timeArr.indexOf(jsonArray[i].time) != -1)) {
 			timeArr.push(jsonArray[i].time)
@@ -111,12 +69,12 @@ function diffCounter(jsonArray, preserveKey, key) {
 
 	for (var j in tempSpace[0]) {
 		tempStor = {}
-		//this logic will ensure ephemeral points coming up and going down.
+			//this logic will ensure ephemeral points coming up and going down.
 
 		for (var k in tempSpace[0][j]) {
 			if (k == "time") {
 				tempStor['time1'] = tempSpace[0][j]['time']
-				// print(tempSpace[0][i]['time'])
+					// print(tempSpace[0][i]['time'])
 				tempStor['time2'] = tempSpace[1][j]['time']
 				continue;
 			}

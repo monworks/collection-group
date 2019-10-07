@@ -1,7 +1,7 @@
 function merge_by_key(key, jsonArray) {
     outputArray = []
     timeArr = []
-    //find the timestamps and put it uniquely in an array
+        //find the timestamps and put it uniquely in an array
     for (var i = 0; i < jsonArray.length; i++) {
         if (!(timeArr.indexOf(jsonArray[i].time) != -1)) {
             timeArr.push(jsonArray[i].time)
@@ -40,49 +40,49 @@ function jsonConcat(o1, o2) {
 
 var preserveKey = []
 
-function diffCounter(jsonArray, preserveKey) {
+function diffCounter(jsonArray, preserveKey, key) {
     timeArr = []
-    //find the timestamps and put it uniquely in an array
+        //find the timestamps and put it uniquely in an array
     for (var i = 0; i < jsonArray.length; i++) {
         if (!(timeArr.indexOf(jsonArray[i].time) != -1)) {
             timeArr.push(jsonArray[i].time)
         }
     }
+
     tempSpace = {}
     for (k in timeArr) {
         for (var i = 0; i < jsonArray.length; i++) {
             if (jsonArray[i].time == timeArr[k]) {
                 if (!(k in tempSpace)) {
-                    tempSpace[k] = []
-                    tempSpace[k].push(jsonArray[i])
+                    tempSpace[k] = {}
+                    tempSpace[k][jsonArray[i][key]] = jsonArray[i]
                 } else {
-                    tempSpace[k].push(jsonArray[i]);
+                    tempSpace[k][jsonArray[i][key]] = jsonArray[i];
                 }
             }
         }
     }
 
-    if (tempSpace[0].length != tempSpace[1].length) {
-        // print("Failure!");
-        return false;
-    }
+    //here we consider and track the processes which exist for two times consistently otherwise , we dont consider them.
 
     outputArray = []
 
-    for (var i = 0; i < tempSpace[0].length; i++) {
+    for (var j in tempSpace[0]) {
         tempStor = {}
-        for (var k in tempSpace[0][i]) {
+            //this logic will ensure ephemeral points coming up and going down.
+
+        for (var k in tempSpace[0][j]) {
             if (k == "time") {
-                tempStor['time1'] = tempSpace[0][i]['time']
-                // print(tempSpace[0][i]['time'])
-                tempStor['time2'] = tempSpace[1][i]['time']
+                tempStor['time1'] = tempSpace[0][j]['time']
+                    // print(tempSpace[0][i]['time'])
+                tempStor['time2'] = tempSpace[1][j]['time']
                 continue;
             }
             if ((preserveKey.indexOf(k) != -1)) {
-                tempStor[k] = tempSpace[1][i][k];
+                tempStor[k] = tempSpace[1][j][k];
                 continue;
             }
-            tempStor[k] = tempSpace[1][i][k] - tempSpace[0][i][k];
+            tempStor[k] = tempSpace[1][j][k] - tempSpace[0][j][k];
         }
         outputArray.push(tempStor)
     }
